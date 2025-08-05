@@ -42,11 +42,12 @@ export function NetlifyPasswordSetup() {
 
   const handleInviteToken = () => {
     try {
-      // استخراج invite_token من الرابط
+      // استخراج invite_token من window.location.hash
       const hash = window.location.hash
       let inviteToken = ''
 
       if (hash && hash.includes('invite_token=')) {
+        // إزالة # من البداية وتحليل المعاملات
         const params = new URLSearchParams(hash.substring(1))
         inviteToken = params.get('invite_token') || ''
       }
@@ -61,7 +62,7 @@ export function NetlifyPasswordSetup() {
       setStatus('processing')
       setMessage('جارٍ تفعيل الدعوة...')
 
-      // إعداد مستمعي الأحداث
+      // إعداد مستمعي الأحداث قبل قبول الدعوة
       window.netlifyIdentity.on('login', (user: any) => {
         console.log('تم تسجيل الدخول بنجاح:', user)
         setStatus('success')
@@ -87,22 +88,17 @@ export function NetlifyPasswordSetup() {
       window.netlifyIdentity.on('error', (err: any) => {
         console.error('خطأ في Netlify Identity:', err)
         setStatus('error')
-        setMessage('حدث خطأ أثناء إعداد كلمة المرور. يرجى المحاولة مرة أخرى.')
+        setMessage('رابط الدعوة غير صالح أو منتهي الصلاحية')
       })
 
-      // تفعيل الدعوة
+      // تفعيل الدعوة باستخدام الرمز المميز
       setTimeout(() => {
         try {
-          if (window.netlifyIdentity.acceptInvite) {
-            window.netlifyIdentity.acceptInvite(inviteToken)
-          } else {
-            // فتح نافذة إعداد كلمة السر
-            window.netlifyIdentity.open()
-          }
+          window.netlifyIdentity.acceptInvite({ token: inviteToken })
         } catch (error) {
           console.error('خطأ في تفعيل الدعوة:', error)
           setStatus('error')
-          setMessage('حدث خطأ أثناء تفعيل الدعوة')
+          setMessage('رابط الدعوة غير صالح أو منتهي الصلاحية')
         }
       }, 1000)
 
