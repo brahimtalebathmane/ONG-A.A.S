@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { MessageCircle, Calendar, BarChart3, Shield, FileText, Users } from 'lucide-react'
 import { supabase, Post, Claim, Comment, User } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { NetlifyInviteDetector } from '../components/NetlifyInviteDetector'
 
 export function HomePage() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -123,6 +124,7 @@ export function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <NetlifyInviteDetector />
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">

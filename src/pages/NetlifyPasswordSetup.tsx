@@ -14,11 +14,11 @@ export function NetlifyPasswordSetup() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-  const [showWidget, setShowWidget] = useState(false)
   
-  const token = searchParams.get('token')
+  const accessToken = searchParams.get('access_token')
   const type = searchParams.get('type')
-  const email = searchParams.get('email')
+  const tokenType = searchParams.get('token_type')
+  const expiresIn = searchParams.get('expires_in')
 
   useEffect(() => {
     // Load Netlify Identity Widget
@@ -30,9 +30,9 @@ export function NetlifyPasswordSetup() {
       if (window.netlifyIdentity) {
         window.netlifyIdentity.init()
         
-        // Check if this is an invitation flow
-        if (token && (type === 'invite' || type === 'recovery')) {
-          setShowWidget(true)
+        // Check if this is an invitation flow with access token
+        if (accessToken && type === 'invite') {
+          console.log('Processing Netlify Identity invitation...')
           
           // Set up event listeners
           window.netlifyIdentity.on('login', (user: any) => {
@@ -51,17 +51,38 @@ export function NetlifyPasswordSetup() {
             }, 2000)
           })
 
+          window.netlifyIdentity.on('init', (user: any) => {
+            if (!user) {
+              // Auto-open the widget for invitation
+              setTimeout(() => {
+                window.netlifyIdentity.open()
+              }, 1000)
+            }
+          })
+
           window.netlifyIdentity.on('error', (err: any) => {
             console.error('Netlify Identity error:', err)
             setError('حدث خطأ أثناء إعداد كلمة المرور. يرجى المحاولة مرة أخرى.')
           })
 
-          // Auto-open the widget for invitation
-          setTimeout(() => {
-            window.netlifyIdentity.open()
-          }, 1000)
+          // Try to accept the invitation using the access token
+          try {
+            // Set the token in localStorage for Netlify Identity to use
+            if (accessToken) {
+              localStorage.setItem('gotrue.user', JSON.stringify({
+                token: {
+                  access_token: accessToken,
+                  token_type: tokenType || 'bearer',
+                  expires_in: expiresIn ? parseInt(expiresIn) : 3600,
+                  expires_at: Date.now() + (expiresIn ? parseInt(expiresIn) * 1000 : 3600000)
+                }
+              }))
+            }
+          } catch (err) {
+            console.error('Error processing invitation token:', err)
+          }
         } else {
-          setError('رابط دعوة غير صالح')
+          setError('رابط دعوة غير صالح أو منتهي الصلاحية')
         }
       }
       setLoading(false)
@@ -79,7 +100,7 @@ export function NetlifyPasswordSetup() {
         document.head.removeChild(script)
       }
     }
-  }, [token, type, navigate])
+  }, [accessToken, type, tokenType, expiresIn, navigate])
 
   const handleOpenWidget = () => {
     if (window.netlifyIdentity) {
@@ -158,11 +179,6 @@ export function NetlifyPasswordSetup() {
             <p className="text-gray-600 text-sm mb-4">
               تم دعوتك للانضمام كمدير محتوى. يرجى إعداد كلمة مرور للمتابعة.
             </p>
-            {email && (
-              <p className="text-sm text-gray-500 mb-4">
-                البريد الإلكتروني: {email}
-              </p>
-            )}
           </div>
 
           <div className="space-y-4">
