@@ -8,7 +8,6 @@ import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { UserDashboard } from './pages/UserDashboard'
 import { AdminDashboard } from './pages/AdminDashboard'
-import { NetlifyAdminPage } from './pages/NetlifyAdminPage'
 
 function AppContent() {
   const { user } = useAuth()
@@ -50,18 +49,6 @@ function AppContent() {
                 <AdminDashboard />
               </ProtectedRoute>
             } 
-          />
-
-          {/* Netlify Identity password setup page with invite token param */}
-          <Route 
-            path="/netlify-admin/:inviteToken" 
-            element={<NetlifyAdminPage />} 
-          />
-
-          {/* Netlify Identity admin page without invite token */}
-          <Route 
-            path="/netlify-admin" 
-            element={<NetlifyAdminPage />} 
           />
 
           {/* Redirect unknown routes to home */}
