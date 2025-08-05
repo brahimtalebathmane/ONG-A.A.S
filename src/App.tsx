@@ -9,12 +9,14 @@ import { RegisterPage } from './pages/RegisterPage'
 import { UserDashboard } from './pages/UserDashboard'
 import { AdminDashboard } from './pages/AdminDashboard'
 import { NetlifyPasswordSetup } from './pages/NetlifyPasswordSetup'
+import { NetlifyInviteDetector } from './components/NetlifyInviteDetector'
 
 function AppContent() {
   const { user } = useAuth()
 
   return (
     <Router>
+      <NetlifyInviteDetector />
       <Layout>
         <Routes>
           {/* Home page */}
@@ -53,10 +55,7 @@ function AppContent() {
           />
 
           {/* Netlify Identity password setup */}
-          <Route 
-            path="/netlify-password-setup" 
-            element={<NetlifyPasswordSetup />} 
-          />
+          <Route path="/netlify-password-setup" element={<NetlifyPasswordSetup />} />
 
           {/* Redirect unknown routes to home */}
           <Route path="*" element={<Navigate to="/" replace />} />

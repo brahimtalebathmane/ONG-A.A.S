@@ -5,35 +5,24 @@ export function NetlifyInviteDetector() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    // Check if URL contains Netlify Identity invitation fragment
+    // التحقق من وجود invite_token في الرابط
     const hash = window.location.hash
     
-    if (hash && hash.includes('access_token=') && hash.includes('type=invite')) {
-      // Extract parameters from hash fragment
+    if (hash && hash.includes('invite_token=')) {
+      // استخراج الرمز المميز
       const params = new URLSearchParams(hash.substring(1))
-      const accessToken = params.get('access_token')
-      const type = params.get('type')
-      const tokenType = params.get('token_type')
-      const expiresIn = params.get('expires_in')
+      const inviteToken = params.get('invite_token')
       
-      if (accessToken && type === 'invite') {
-        // Build query string for password setup page
-        const queryParams = new URLSearchParams({
-          access_token: accessToken,
-          type: type,
-          ...(tokenType && { token_type: tokenType }),
-          ...(expiresIn && { expires_in: expiresIn })
-        })
-        
-        // Clear the hash from current URL
+      if (inviteToken) {
+        // إزالة الهاش من الرابط الحالي
         window.history.replaceState(null, '', window.location.pathname)
         
-        // Redirect to password setup page with parameters
-        navigate(`/netlify-password-setup?${queryParams.toString()}`, { replace: true })
+        // التوجيه إلى صفحة إعداد كلمة السر مع الرمز المميز
+        navigate(`/netlify-password-setup#invite_token=${inviteToken}`, { replace: true })
       }
     }
   }, [navigate])
 
-  // This component doesn't render anything
+  // هذا المكون لا يعرض أي شيء
   return null
 }
