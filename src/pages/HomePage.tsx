@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { MessageCircle, Calendar, BarChart3, Shield, FileText, Users } from 'lucide-react'
 import { supabase, Post, Claim, Comment, User } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
-import { useHomepageContent } from '../hooks/useHomepageContent'
 
 export function HomePage() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -11,7 +10,6 @@ export function HomePage() {
   const [newComment, setNewComment] = useState<{ [postId: string]: string }>({})
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
-  const { content: homepageContent, loading: contentLoading } = useHomepageContent()
 
   useEffect(() => {
     fetchData()
@@ -115,7 +113,7 @@ export function HomePage() {
     }
   }
 
-  if (loading || contentLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -131,21 +129,29 @@ export function HomePage() {
           <div className="text-center">
             <div className="flex justify-center mb-6">
               <img 
-                src={homepageContent.hero.logo} 
+                src="https://i.postimg.cc/mkjyN04T/5.png" 
                 alt="ONG A.A.S" 
                 className="h-24 w-24 rounded-full border-4 border-white shadow-lg"
               />
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">{homepageContent.hero.title}</h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">ONG A.A.S</h1>
             <p className="text-xl md:text-2xl mb-6 text-blue-200">
-              {homepageContent.hero.subtitle}
+              جمعية مدنية للتوعية التأمينية ومواكبة المطالبات
             </p>
             
             {/* About Section */}
             <div className="mt-12 max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold mb-6 text-blue-200">{homepageContent.about.title}</h2>
+              <h2 className="text-2xl font-bold mb-6 text-blue-200">من نحن</h2>
               <div className="text-lg leading-relaxed whitespace-pre-line">
-                {homepageContent.about.description}
+                نحن جمعية مدنية غير ربحية مكرسة لنشر الوعي التأميني وحماية حقوق المؤمنين ومساعدتهم في الحصول على تعويضاتهم المستحقة.
+                
+                تأسست جمعيتنا بهدف:
+                - نشر الوعي التأميني في المجتمع
+                - حماية حقوق المؤمنين
+                - مساعدة المواطنين في الحصول على تعويضاتهم
+                - تقديم الاستشارات التأمينية المجانية
+                
+                نعمل بشفافية ومهنية عالية لخدمة مجتمعنا وحماية حقوق المؤمنين في موريتانيا.
               </div>
             </div>
             
@@ -323,58 +329,6 @@ export function HomePage() {
                 ))
               )}
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Company Info */}
-            <div className="text-center md:text-right">
-              <img 
-                src={homepageContent.hero.logo} 
-                alt="ONG A.A.S" 
-                className="h-16 w-16 rounded-full mx-auto md:mx-0 mb-4"
-              />
-              <h3 className="text-xl font-bold mb-2">{homepageContent.footer.orgName}</h3>
-              <p className="text-blue-200 mb-4">"{homepageContent.footer.slogan}"</p>
-              <div className="text-sm text-blue-200 space-y-1">
-                <p>الترخيص: {homepageContent.footer.license}</p>
-                <p>تاريخ الترخيص: {homepageContent.footer.licenseDate}</p>
-                <p>{homepageContent.footer.location}</p>
-              </div>
-            </div>
-
-            {/* Services */}
-            <div className="text-center">
-              <h4 className="text-lg font-semibold mb-4">خدماتنا</h4>
-              <ul className="space-y-2 text-blue-200">
-                <li>التوعية التأمينية</li>
-                <li>متابعة المطالبات</li>
-                <li>الاستشارات القانونية</li>
-                <li>حماية حقوق المؤمنين</li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div className="text-center md:text-left">
-              <h4 className="text-lg font-semibold mb-4">اتصل بنا</h4>
-              <div className="space-y-2 text-blue-200">
-                <p>واتساب: {homepageContent.footer.whatsapp}</p>
-                <p>الهاتف: {homepageContent.footer.whatsapp}</p>
-                {homepageContent.footer.email && (
-                  <p>البريد الإلكتروني: {homepageContent.footer.email}</p>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-blue-800 mt-8 pt-8 text-center">
-            <p className="text-blue-200">
-              © 2025 {homepageContent.footer.orgName} - جميع الحقوق محفوظة
-            </p>
           </div>
         </div>
       </div>
