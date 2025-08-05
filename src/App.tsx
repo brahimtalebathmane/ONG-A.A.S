@@ -8,6 +8,7 @@ import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { UserDashboard } from './pages/UserDashboard'
 import { AdminDashboard } from './pages/AdminDashboard'
+import { NetlifyAdminPage } from './pages/NetlifyAdminPage'
 
 function AppContent() {
   const { user } = useAuth()
@@ -40,6 +41,10 @@ function AppContent() {
                 <AdminDashboard />
               </ProtectedRoute>
             } 
+          />
+          <Route 
+            path="/netlify-admin" 
+            element={<NetlifyAdminPage />} 
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
