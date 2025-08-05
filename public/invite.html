@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة إدارية - ONG A.A.S</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 4px solid #667eea;
+            object-fit: cover;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        .welcome-text {
+            color: #4a5568;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .instructions {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-right: 4px solid #667eea;
+        }
+
+        .instructions h3 {
+            color: #2d3748;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            text-align: right;
+        }
+
+        .instructions li {
+            color: #4a5568;
+            font-size: 14px;
+            margin-bottom: 8px;
+            padding-right: 20px;
+            position: relative;
+        }
+
+        .instructions li::before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+
+        .setup-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-family: 'Tajawal', Arial, sans-serif;
+        }
+
+        .setup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .setup-button:active {
+            transform: translateY(0);
+        }
+
+        .footer-text {
+            color: #718096;
+            font-size: 12px;
+            margin-top: 30px;
+            line-height: 1.5;
+        }
+
+        .loading {
+            display: none;
+            color: #667eea;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .welcome-text {
+                font-size: 16px;
+            }
+        }
+
+        /* Hide Netlify Identity Widget default styles */
+        .netlify-identity-widget {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            z-index: 9999 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://i.postimg.cc/mkjyN04T/5.png" alt="ONG A.A.S" class="logo">
+        
+        <h1>مرحباً بك</h1>
+        <p class="subtitle">جمعية التأمين للتوعية</p>
+        
+        <div class="welcome-text">
+            تم دعوتك للانضمام كمدير محتوى في نظام إدارة الموقع
+        </div>
+        
+        <div class="instructions">
+            <h3>خطوات إنشاء كلمة المرور:</h3>
+            <ul>
+                <li>انقر على زر "إنشاء كلمة المرور" أدناه</li>
+                <li>أدخل كلمة مرور قوية (8 أحرف على الأقل)</li>
+                <li>أكد كلمة المرور</li>
+                <li>سيتم توجيهك تلقائياً لوحة إدارة المحتوى</li>
+            </ul>
+        </div>
+        
+        <button id="setupButton" class="setup-button" onclick="openPasswordSetup()">
+            إنشاء كلمة المرور
+        </button>
+        
+        <div id="loading" class="loading">
+            جاري التحضير...
+            <span class="spinner"></span>
+        </div>
+        
+        <p class="footer-text">
+            بعد إنشاء كلمة المرور، ستتمكن من الوصول إلى لوحة إدارة المحتوى<br>
+            لتحديث محتوى الصفحة الرئيسية للموقع
+        </p>
+    </div>
+
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <script>
+        // Initialize Netlify Identity
+        if (window.netlifyIdentity) {
+            window.netlifyIdentity.init({
+                locale: 'ar' // Set Arabic locale if supported
+            });
+        }
+
+        function openPasswordSetup() {
+            const button = document.getElementById('setupButton');
+            const loading = document.getElementById('loading');
+            
+            // Show loading state
+            button.style.display = 'none';
+            loading.style.display = 'block';
+            
+            // Open Netlify Identity modal
+            if (window.netlifyIdentity) {
+                window.netlifyIdentity.open();
+                
+                // Reset UI after a short delay
+                setTimeout(() => {
+                    button.style.display = 'inline-block';
+                    loading.style.display = 'none';
+                }, 1000);
+            } else {
+                alert('خطأ في تحميل نظام المصادقة. يرجى إعادة تحميل الصفحة.');
+                button.style.display = 'inline-block';
+                loading.style.display = 'none';
+            }
+        }
+
+        // Handle Netlify Identity events
+        if (window.netlifyIdentity) {
+            // Auto-open modal if user is not logged in and has invitation token
+            window.netlifyIdentity.on('init', user => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const token = urlParams.get('token');
+                const type = urlParams.get('type');
+                
+                // If there's an invitation token and no user, auto-open
+                if (!user && token && (type === 'invite' || type === 'recovery')) {
+                    setTimeout(() => {
+                        openPasswordSetup();
+                    }, 500);
+                }
+            });
+
+            // Handle successful login/signup
+            window.netlifyIdentity.on('login', user => {
+                console.log('User logged in:', user);
+                
+                // Redirect to admin panel after successful setup
+                setTimeout(() => {
+                    window.location.href = '/admin/';
+                }, 1000);
+            });
+
+            // Handle signup completion
+            window.netlifyIdentity.on('signup', user => {
+                console.log('User signed up:', user);
+                
+                // Redirect to admin panel after successful setup
+                setTimeout(() => {
+                    window.location.href = '/admin/';
+                }, 1000);
+            });
+
+            // Handle errors
+            window.netlifyIdentity.on('error', err => {
+                console.error('Netlify Identity error:', err);
+                
+                // Reset UI on error
+                const button = document.getElementById('setupButton');
+                const loading = document.getElementById('loading');
+                button.style.display = 'inline-block';
+                loading.style.display = 'none';
+            });
+
+            // Handle modal close
+            window.netlifyIdentity.on('close', () => {
+                // Reset UI when modal is closed
+                const button = document.getElementById('setupButton');
+                const loading = document.getElementById('loading');
+                button.style.display = 'inline-block';
+                loading.style.display = 'none';
+            });
+        }
+
+        // Auto-trigger setup if coming from invitation email
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const type = urlParams.get('type');
+            
+            if (token && (type === 'invite' || type === 'recovery')) {
+                // Add visual indication that this is an invitation
+                document.querySelector('.welcome-text').innerHTML = 
+                    'تم دعوتك للانضمام كمدير محتوى. يرجى إنشاء كلمة مرور للمتابعة.';
+                
+                // Auto-open after a short delay for better UX
+                setTimeout(() => {
+                    openPasswordSetup();
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
