@@ -9,7 +9,6 @@ import { RegisterPage } from './pages/RegisterPage'
 import { UserDashboard } from './pages/UserDashboard'
 import { AdminDashboard } from './pages/AdminDashboard'
 import { NetlifyAdminPage } from './pages/NetlifyAdminPage'
-import { NetlifyAdminPage } from './pages/NetlifyAdminPage'
 
 function AppContent() {
   const { user } = useAuth()
