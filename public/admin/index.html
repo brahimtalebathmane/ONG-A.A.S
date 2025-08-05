@@ -32,5 +32,28 @@
       });
     }
   </script>
+  <script>
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on("init", user => {
+        if (!user) {
+          window.netlifyIdentity.on("login", () => {
+            document.location.href = "/admin/";
+          });
+        }
+      });
+      
+      // Handle invitation and recovery flows
+      window.netlifyIdentity.on("init", user => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const type = urlParams.get('type');
+        
+        if (token && (type === 'invite' || type === 'recovery')) {
+          // Redirect to password setup page
+          window.location.href = `/netlify-admin?token=${token}&type=${type}&email=${urlParams.get('email') || ''}`;
+        }
+      });
+    }
+  </script>
 </body>
 </html>
