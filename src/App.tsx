@@ -17,15 +17,22 @@ function AppContent() {
     <Router>
       <Layout>
         <Routes>
+          {/* Home page */}
           <Route path="/" element={<HomePage />} />
+
+          {/* Login page */}
           <Route 
             path="/login" 
             element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <LoginPage />} 
           />
+
+          {/* Registration page */}
           <Route 
             path="/register" 
             element={user ? <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace /> : <RegisterPage />} 
           />
+
+          {/* User dashboard (protected) */}
           <Route 
             path="/dashboard" 
             element={
@@ -34,6 +41,8 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+
+          {/* Admin dashboard (protected, admin only) */}
           <Route 
             path="/admin" 
             element={
@@ -42,14 +51,20 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
+
+          {/* Netlify Identity password setup page with invite token param */}
+          <Route 
+            path="/netlify-admin/:inviteToken" 
+            element={<NetlifyAdminPage />} 
+          />
+
+          {/* Netlify Identity admin page without invite token */}
           <Route 
             path="/netlify-admin" 
             element={<NetlifyAdminPage />} 
           />
-          <Route 
-            path="/netlify-admin" 
-            element={<NetlifyAdminPage />} 
-          />
+
+          {/* Redirect unknown routes to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>
