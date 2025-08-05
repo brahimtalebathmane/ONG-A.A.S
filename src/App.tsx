@@ -8,6 +8,7 @@ import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { UserDashboard } from './pages/UserDashboard'
 import { AdminDashboard } from './pages/AdminDashboard'
+import { NetlifyPasswordSetup } from './pages/NetlifyPasswordSetup'
 
 function AppContent() {
   const { user } = useAuth()
@@ -49,6 +50,12 @@ function AppContent() {
                 <AdminDashboard />
               </ProtectedRoute>
             } 
+          />
+
+          {/* Netlify Identity password setup */}
+          <Route 
+            path="/netlify-password-setup" 
+            element={<NetlifyPasswordSetup />} 
           />
 
           {/* Redirect unknown routes to home */}
