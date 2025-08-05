@@ -1,5 +1,4 @@
 import React from 'react'
-import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { Layout } from './components/Layout'
@@ -9,26 +8,12 @@ import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { UserDashboard } from './pages/UserDashboard'
 import { AdminDashboard } from './pages/AdminDashboard'
-import { NetlifyPasswordSetup } from './pages/NetlifyPasswordSetup'
-import { NetlifyInviteDetector } from './components/NetlifyInviteDetector'
 
 function AppContent() {
   const { user } = useAuth()
 
-  // كشف invite_token وإعادة التوجيه التلقائي
-  useEffect(() => {
-    const hash = window.location.hash;
-    if (hash.includes('invite_token=')) {
-      const token = hash.split('invite_token=')[1];
-      if (token) {
-        window.location.href = `/netlify-password-setup#invite_token=${token}`;
-      }
-    }
-  }, []);
-
   return (
     <Router>
-      <NetlifyInviteDetector />
       <Layout>
         <Routes>
           {/* Home page */}
@@ -65,9 +50,6 @@ function AppContent() {
               </ProtectedRoute>
             } 
           />
-
-          {/* Netlify Identity password setup */}
-          <Route path="/netlify-password-setup" element={<NetlifyPasswordSetup />} />
 
           {/* Redirect unknown routes to home */}
           <Route path="*" element={<Navigate to="/" replace />} />
