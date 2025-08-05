@@ -1,0 +1,37 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: "homepage"
+    label: "Homepage Content"
+    files:
+      - file: "content/homepage/hero.md"
+        label: "Hero Section"
+        name: "hero"
+        fields:
+          - {label: "Title", name: "title", widget: "string", hint: "Main headline displayed on homepage"}
+          - {label: "Subtitle", name: "subtitle", widget: "text", hint: "Descriptive text below the main title"}
+          - {label: "Logo Image", name: "logo", widget: "image", hint: "Organization logo (recommended: 200x200px)"}
+      
+      - file: "content/homepage/about.md"
+        label: "About Section"
+        name: "about"
+        fields:
+          - {label: "Section Title", name: "title", widget: "string", hint: "Title for the about section"}
+          - {label: "Description", name: "description", widget: "markdown", hint: "Detailed description of the organization"}
+      
+      - file: "content/homepage/footer.md"
+        label: "Footer Content"
+        name: "footer"
+        fields:
+          - {label: "Organization Name", name: "orgName", widget: "string"}
+          - {label: "Slogan", name: "slogan", widget: "string", hint: "Organization motto or slogan"}
+          - {label: "License Number", name: "license", widget: "string"}
+          - {label: "License Date", name: "licenseDate", widget: "string"}
+          - {label: "Location", name: "location", widget: "string"}
+          - {label: "WhatsApp Number", name: "whatsapp", widget: "string", hint: "Include country code (e.g., +222 34 14 14 97)"}
+          - {label: "Email", name: "email", widget: "string", required: false}

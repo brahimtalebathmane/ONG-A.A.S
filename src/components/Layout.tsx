@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { Menu, X, LogOut, User, Home, Settings } from 'lucide-react'
+import { Menu, X, LogOut, User, Home, Settings, Shield } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { NetlifyIdentityWidget } from './NetlifyIdentityWidget'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -12,6 +13,14 @@ export function Layout({ children }: LayoutProps) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
+
+  const handleAdminLogin = () => {
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.open()
+    } else {
+      window.location.href = '/admin/'
+    }
+  }
 
   const handleLogout = () => {
     logout()
@@ -71,6 +80,15 @@ export function Layout({ children }: LayoutProps) {
                 )
               })}
               
+              {/* Content Admin Button */}
+              <button
+                onClick={handleAdminLogin}
+                className="flex items-center space-x-2 space-x-reverse px-3 py-2 rounded-md text-sm font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 transition-colors"
+              >
+                <Shield className="h-4 w-4" />
+                <span>إدارة المحتوى</span>
+              </button>
+              
               {user && (
                 <button
                   onClick={handleLogout}
@@ -115,6 +133,18 @@ export function Layout({ children }: LayoutProps) {
                 )
               })}
               
+              {/* Mobile Content Admin Button */}
+              <button
+                onClick={() => {
+                  handleAdminLogin()
+                  setIsMenuOpen(false)
+                }}
+                className="w-full flex items-center space-x-3 space-x-reverse px-3 py-2 rounded-md text-base font-medium text-purple-600 hover:text-purple-700 hover:bg-purple-50 transition-colors"
+              >
+                <Shield className="h-5 w-5" />
+                <span>إدارة المحتوى</span>
+              </button>
+              
               {user && (
                 <button
                   onClick={handleLogout}
@@ -131,6 +161,7 @@ export function Layout({ children }: LayoutProps) {
 
       {/* Main Content */}
       <main className="flex-1">
+        <NetlifyIdentityWidget />
         {children}
       </main>
 
