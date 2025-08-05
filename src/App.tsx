@@ -1,4 +1,5 @@
 import React from 'react'
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { Layout } from './components/Layout'
@@ -13,6 +14,17 @@ import { NetlifyInviteDetector } from './components/NetlifyInviteDetector'
 
 function AppContent() {
   const { user } = useAuth()
+
+  // كشف invite_token وإعادة التوجيه التلقائي
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash.includes('invite_token=')) {
+      const token = hash.split('invite_token=')[1];
+      if (token) {
+        window.location.href = `/netlify-password-setup#invite_token=${token}`;
+      }
+    }
+  }, []);
 
   return (
     <Router>

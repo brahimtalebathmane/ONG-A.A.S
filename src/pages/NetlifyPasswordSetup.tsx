@@ -47,9 +47,12 @@ export function NetlifyPasswordSetup() {
       let inviteToken = ''
 
       if (hash && hash.includes('invite_token=')) {
-        // إزالة # من البداية وتحليل المعاملات
-        const params = new URLSearchParams(hash.substring(1))
-        inviteToken = params.get('invite_token') || ''
+        // استخراج الرمز المميز مباشرة من الهاش
+        const tokenPart = hash.split('invite_token=')[1]
+        if (tokenPart) {
+          // إزالة أي معاملات إضافية بعد الرمز المميز
+          inviteToken = tokenPart.split('&')[0]
+        }
       }
 
       // التحقق من وجود الرمز المميز
