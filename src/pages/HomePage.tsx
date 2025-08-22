@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { MessageCircle, Calendar, BarChart3, Shield, FileText, Users } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase, Post, Claim, Comment, User } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
+import { formatDate } from '../i18n'
 
 export function HomePage() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -10,6 +12,7 @@ export function HomePage() {
   const [newComment, setNewComment] = useState<{ [postId: string]: string }>({})
   const [loading, setLoading] = useState(true)
   const { user } = useAuth()
+  const { t, i18n } = useTranslation()
 
   useEffect(() => {
     fetchData()
@@ -91,7 +94,7 @@ export function HomePage() {
       setNewComment(prev => ({ ...prev, [postId]: '' }))
     } catch (error) {
       console.error('Error adding comment:', error)
-      alert('حدث خطأ أثناء إضافة التعليق')
+      alert(t('posts.comment_add_error'))
     }
   }
 
@@ -106,9 +109,9 @@ export function HomePage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'Pending': return 'قيد الانتظار'
-      case 'In Progress': return 'قيد المعالجة'
-      case 'Resolved': return 'مكتملة'
+      case 'Pending': return t('claims.status.pending')
+      case 'In Progress': return t('claims.status.in_progress')
+      case 'Resolved': return t('claims.status.resolved')
       default: return status
     }
   }
@@ -134,44 +137,36 @@ export function HomePage() {
                 className="h-24 w-24 rounded-full border-4 border-white shadow-lg"
               />
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">ONG A.A.S</h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4">{t('homepage.hero.title')}</h1>
             <p className="text-xl md:text-2xl mb-6 text-blue-200">
-              جمعية مدنية للتوعية التأمينية ومواكبة المطالبات
+              {t('homepage.hero.subtitle')}
             </p>
             
             {/* About Section */}
             <div className="mt-12 max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold mb-6 text-blue-200">من نحن</h2>
+              <h2 className="text-2xl font-bold mb-6 text-blue-200">{t('homepage.hero.about_title')}</h2>
               <div className="text-lg leading-relaxed whitespace-pre-line">
-                نحن جمعية مدنية غير ربحية مكرسة لنشر الوعي التأميني وحماية حقوق المؤمنين ومساعدتهم في الحصول على تعويضاتهم المستحقة.
-                
-                تأسست جمعيتنا بهدف:
-                - نشر الوعي التأميني في المجتمع
-                - حماية حقوق المؤمنين
-                - مساعدة المواطنين في الحصول على تعويضاتهم
-                - تقديم الاستشارات التأمينية المجانية
-                
-                نعمل بشفافية ومهنية عالية لخدمة مجتمعنا وحماية حقوق المؤمنين في موريتانيا.
+                {t('homepage.hero.about_description')}
               </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
               <div className="flex flex-col items-center p-6 bg-white bg-opacity-10 rounded-lg backdrop-blur-sm">
                 <Shield className="h-12 w-12 mb-4 text-blue-200" />
-                <h3 className="text-lg font-semibold mb-2">حماية شاملة</h3>
-                <p className="text-blue-200 text-center">نحمي حقوق المؤمنين ونساعدهم في الحصول على تعويضاتهم</p>
+                <h3 className="text-lg font-semibold mb-2">{t('homepage.features.comprehensive_protection.title')}</h3>
+                <p className="text-blue-200 text-center">{t('homepage.features.comprehensive_protection.description')}</p>
               </div>
               
               <div className="flex flex-col items-center p-6 bg-white bg-opacity-10 rounded-lg backdrop-blur-sm">
                 <FileText className="h-12 w-12 mb-4 text-blue-200" />
-                <h3 className="text-lg font-semibold mb-2">خدمات متطورة</h3>
-                <p className="text-blue-200 text-center">نقدم خدمات متطورة لمتابعة المطالبات والتعويضات</p>
+                <h3 className="text-lg font-semibold mb-2">{t('homepage.features.advanced_services.title')}</h3>
+                <p className="text-blue-200 text-center">{t('homepage.features.advanced_services.description')}</p>
               </div>
               
               <div className="flex flex-col items-center p-6 bg-white bg-opacity-10 rounded-lg backdrop-blur-sm">
                 <Users className="h-12 w-12 mb-4 text-blue-200" />
-                <h3 className="text-lg font-semibold mb-2">مرجعية رسمية</h3>
-                <p className="text-blue-200 text-center">جمعية معتمدة رسمياً لحماية حقوق المؤمنين</p>
+                <h3 className="text-lg font-semibold mb-2">{t('homepage.features.official_reference.title')}</h3>
+                <p className="text-blue-200 text-center">{t('homepage.features.official_reference.description')}</p>
               </div>
             </div>
           </div>
@@ -184,14 +179,14 @@ export function HomePage() {
           <div className="space-y-6">
             <div className="flex items-center space-x-3 space-x-reverse">
               <MessageCircle className="h-6 w-6 text-blue-600" />
-              <h2 className="text-2xl font-bold text-gray-900">الأخبار والمقالات</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('posts.title')}</h2>
             </div>
             
             <div className="space-y-6 max-h-96 overflow-y-auto">
               {posts.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <MessageCircle className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p>لا توجد مقالات متاحة حالياً</p>
+                  <p>{t('posts.empty')}</p>
                 </div>
               ) : (
                 posts.map((post) => (
@@ -222,17 +217,17 @@ export function HomePage() {
                       
                       <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                         <span>
-                          بواسطة: {post.users?.full_name || 'الإدارة'}
+                          {t('posts.author')}: {post.users?.full_name || t('nav.admin')}
                         </span>
                         <span>
                           <Calendar className="h-4 w-4 inline mr-1" />
-                          {new Date(post.created_at).toLocaleDateString('ar-SA')}
+                          {formatDate(post.created_at, i18n.language)}
                         </span>
                       </div>
 
                       {/* Comments Section */}
                       <div className="border-t pt-4">
-                        <h4 className="font-medium text-gray-900 mb-3">التعليقات</h4>
+                        <h4 className="font-medium text-gray-900 mb-3">{t('posts.comments')}</h4>
                         
                         {/* Existing Comments */}
                         <div className="space-y-3 mb-4 max-h-32 overflow-y-auto">
@@ -243,7 +238,7 @@ export function HomePage() {
                                   {comment.users?.full_name}
                                 </span>
                                 <span className="text-xs text-gray-500">
-                                  {new Date(comment.created_at).toLocaleDateString('ar-SA')}
+                                  {formatDate(comment.created_at, i18n.language)}
                                 </span>
                               </div>
                               <p className="text-sm text-gray-700">{comment.content}</p>
@@ -258,7 +253,7 @@ export function HomePage() {
                               type="text"
                               value={newComment[post.id] || ''}
                               onChange={(e) => setNewComment(prev => ({ ...prev, [post.id]: e.target.value }))}
-                              placeholder="اكتب تعليقك..."
+                              placeholder={t('posts.add_comment')}
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                               onKeyPress={(e) => e.key === 'Enter' && handleCommentSubmit(post.id)}
                             />
@@ -267,12 +262,12 @@ export function HomePage() {
                               disabled={!newComment[post.id]?.trim()}
                               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors"
                             >
-                              إرسال
+                              {t('posts.send_comment')}
                             </button>
                           </div>
                         ) : (
                           <p className="text-sm text-gray-500 text-center py-2">
-                            {user ? 'يجب التحقق من حسابك لإضافة تعليق' : 'يجب تسجيل الدخول لإضافة تعليق'}
+                            {user ? t('posts.comment_verification_required') : t('posts.comment_login_required')}
                           </p>
                         )}
                       </div>
@@ -287,21 +282,21 @@ export function HomePage() {
           <div className="space-y-6">
             <div className="flex items-center space-x-3 space-x-reverse">
               <BarChart3 className="h-6 w-6 text-blue-600" />
-              <h2 className="text-2xl font-bold text-gray-900">المطالبات</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('claims.title')}</h2>
             </div>
             
             <div className="space-y-4 max-h-96 overflow-y-auto">
               {claims.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <BarChart3 className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p>لا توجد مطالبات متاحة حالياً</p>
+                  <p>{t('claims.empty')}</p>
                 </div>
               ) : (
                 claims.map((claim, index) => (
                   <div key={claim.id} className="bg-white rounded-lg shadow-md p-6">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        المطالبة #{claims.length - index}
+                        {t('claims.claim_number', { number: claims.length - index })}
                       </h3>
                       <span className={`px-3 py-1 rounded-full text-xs font-medium text-white ${getStatusColor(claim.status)}`}>
                         {getStatusText(claim.status)}
@@ -310,7 +305,7 @@ export function HomePage() {
                     
                     <div className="mb-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-gray-700">التقدم</span>
+                        <span className="text-sm font-medium text-gray-700">{t('claims.progress')}</span>
                         <span className="text-sm text-gray-600">{claim.progress}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
@@ -323,7 +318,7 @@ export function HomePage() {
                     
                     <div className="text-sm text-gray-500">
                       <Calendar className="h-4 w-4 inline mr-1" />
-                      {new Date(claim.created_at).toLocaleDateString('ar-SA')}
+                      {formatDate(claim.created_at, i18n.language)}
                     </div>
                   </div>
                 ))
