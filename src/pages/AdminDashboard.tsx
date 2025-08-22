@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Users, FileText, MessageSquare, Settings, CheckCircle, X, Eye } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase, User, Claim, Post } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { AdminUserManager } from '../components/AdminUserManager'
@@ -9,6 +10,7 @@ import { AdminPostManager } from '../components/AdminPostManager'
 type TabType = 'users' | 'claims' | 'posts'
 
 export function AdminDashboard() {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<TabType>('users')
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -58,19 +60,19 @@ export function AdminDashboard() {
   const tabs = [
     {
       id: 'users' as TabType,
-      label: 'إدارة المستخدمين',
+      label: t('admin.tabs.users'),
       icon: Users,
       count: stats.totalUsers
     },
     {
       id: 'claims' as TabType,
-      label: 'إدارة المطالبات',
+      label: t('admin.tabs.claims'),
       icon: FileText,
       count: stats.totalClaims
     },
     {
       id: 'posts' as TabType,
-      label: 'إدارة المنشورات',
+      label: t('admin.tabs.posts'),
       icon: MessageSquare,
       count: stats.totalPosts
     }
@@ -91,9 +93,9 @@ export function AdminDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center space-x-3 space-x-reverse">
             <Settings className="h-8 w-8" />
-            <span>لوحة الإدارة</span>
+            <span>{t('admin.title')}</span>
           </h1>
-          <p className="text-gray-600 mt-2">مرحباً {user?.full_name}</p>
+          <p className="text-gray-600 mt-2">{t('admin.welcome', { name: user?.full_name })}</p>
         </div>
 
         {/* Stats Cards */}
@@ -101,7 +103,7 @@ export function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">إجمالي المستخدمين</p>
+                <p className="text-sm font-medium text-gray-600">{t('admin.stats.total_users')}</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalUsers}</p>
               </div>
               <Users className="h-8 w-8 text-blue-600" />
@@ -111,7 +113,7 @@ export function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">مستخدمين محققين</p>
+                <p className="text-sm font-medium text-gray-600">{t('admin.stats.verified_users')}</p>
                 <p className="text-2xl font-bold text-green-600">{stats.verifiedUsers}</p>
               </div>
               <CheckCircle className="h-8 w-8 text-green-600" />
@@ -121,7 +123,7 @@ export function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">إجمالي المطالبات</p>
+                <p className="text-sm font-medium text-gray-600">{t('admin.stats.total_claims')}</p>
                 <p className="text-2xl font-bold text-gray-900">{stats.totalClaims}</p>
               </div>
               <FileText className="h-8 w-8 text-purple-600" />
@@ -131,7 +133,7 @@ export function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">مطالبات معلقة</p>
+                <p className="text-sm font-medium text-gray-600">{t('admin.stats.pending_claims')}</p>
                 <p className="text-2xl font-bold text-yellow-600">{stats.pendingClaims}</p>
               </div>
               <FileText className="h-8 w-8 text-yellow-600" />
@@ -141,7 +143,7 @@ export function AdminDashboard() {
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">إجمالي المنشورات</p>
+                <p className="text-sm font-medium text-gray-600">{t('admin.stats.total_posts')}</p>
                 <p className="text-2xl font-bold text-indigo-600">{stats.totalPosts}</p>
               </div>
               <MessageSquare className="h-8 w-8 text-indigo-600" />

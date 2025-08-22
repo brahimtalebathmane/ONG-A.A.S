@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Plus, FileText, Clock, CheckCircle, AlertCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase, Claim } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { ClaimForm } from '../components/ClaimForm'
+import { formatDate } from '../i18n'
 
 export function UserDashboard() {
+  const { t, i18n } = useTranslation()
   const [claims, setClaims] = useState<Claim[]>([])
   const [showClaimForm, setShowClaimForm] = useState(false)
   const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null)
@@ -47,9 +50,9 @@ export function UserDashboard() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'Pending': return 'قيد الانتظار'
-      case 'In Progress': return 'قيد المعالجة'
-      case 'Resolved': return 'مكتملة'
+      case 'Pending': return t('claims.status.pending')
+      case 'In Progress': return t('claims.status.in_progress')
+      case 'Resolved': return t('claims.status.resolved')
       default: return status
     }
   }
@@ -90,8 +93,8 @@ export function UserDashboard() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">لوحة التحكم</h1>
-              <p className="text-gray-600 mt-2">مرحباً {user?.full_name}</p>
+              <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+              <p className="text-gray-600 mt-2">{t('dashboard.welcome', { name: user?.full_name })}</p>
             </div>
             
             {user?.is_verified ? (
@@ -100,12 +103,12 @@ export function UserDashboard() {
                 className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 space-x-reverse"
               >
                 <Plus className="h-5 w-5" />
-                <span>مطالبة جديدة</span>
+                <span>{t('claims.create')}</span>
               </button>
             ) : (
               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <p className="text-yellow-800 text-sm">
-                  يجب التحقق من حسابك قبل تقديم المطالبات
+                  {t('claims.verification_required')}
                 </p>
               </div>
             )}
@@ -114,7 +117,7 @@ export function UserDashboard() {
 
         {/* Account Status */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">حالة الحساب</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">{t('dashboard.account_status')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
@@ -123,28 +126,28 @@ export function UserDashboard() {
                 {user?.is_verified ? (
                   <>
                     <CheckCircle className="h-4 w-4 mr-1" />
-                    محقق
+                    {t('dashboard.verified')}
                   </>
                 ) : (
                   <>
                     <Clock className="h-4 w-4 mr-1" />
-                    قيد المراجعة
+                    {t('dashboard.pending_review')}
                   </>
                 )}
               </div>
-              <p className="text-gray-600 text-sm mt-2">حالة التحقق</p>
+              <p className="text-gray-600 text-sm mt-2">{t('dashboard.verification_status')}</p>
             </div>
             
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">{claims.length}</div>
-              <p className="text-gray-600 text-sm">إجمالي المطالبات</p>
+              <p className="text-gray-600 text-sm">{t('dashboard.total_claims')}</p>
             </div>
             
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
                 {claims.filter(c => c.status === 'Resolved').length}
               </div>
-              <p className="text-gray-600 text-sm">مطالبات مكتملة</p>
+              <p className="text-gray-600 text-sm">{t('dashboard.completed_claims')}</p>
             </div>
           </div>
         </div>
@@ -154,21 +157,21 @@ export function UserDashboard() {
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2 space-x-reverse">
               <FileText className="h-6 w-6" />
-              <span>مطالباتي</span>
+              <span>{t('claims.my_claims')}</span>
             </h2>
           </div>
 
           {claims.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">لا توجد مطالبات</h3>
-              <p className="text-gray-600 mb-4">لم تقم بتقديم أي مطالبات بعد</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">{t('claims.empty')}</h3>
+              <p className="text-gray-600 mb-4">{t('claims.empty_message')}</p>
               {user?.is_verified && (
                 <button
                   onClick={() => setShowClaimForm(true)}
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  تقديم مطالبة جديدة
+                  {t('claims.create_first')}
                 </button>
               )}
             </div>
@@ -188,7 +191,7 @@ export function UserDashboard() {
                         {getStatusText(claim.status)}
                       </span>
                       <span className="text-sm text-gray-500">
-                        المطالبة #{claims.length - index}
+                        {t('claims.claim_number', { number: claims.length - index })}
                       </span>
                     </div>
                   </div>
@@ -197,7 +200,7 @@ export function UserDashboard() {
 
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-700">التقدم</span>
+                      <span className="text-sm font-medium text-gray-700">{t('claims.progress')}</span>
                       <span className="text-sm text-gray-600">{claim.progress}%</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
@@ -209,15 +212,15 @@ export function UserDashboard() {
                   </div>
 
                   <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>تاريخ الحادث: {new Date(claim.date).toLocaleDateString('ar-SA')}</span>
-                    <span>تاريخ التقديم: {new Date(claim.created_at).toLocaleDateString('ar-SA')}</span>
+                    <span>{t('claims.accident_date')}: {formatDate(claim.date, i18n.language)}</span>
+                    <span>{t('common.created_at')}: {formatDate(claim.created_at, i18n.language)}</span>
                   </div>
 
                   <button
                     onClick={() => setSelectedClaim(claim)}
                     className="mt-4 text-blue-600 hover:text-blue-700 text-sm font-medium"
                   >
-                    عرض التفاصيل
+                    {t('common.view')} {t('common.details')}
                   </button>
                 </div>
               ))}
@@ -232,7 +235,7 @@ export function UserDashboard() {
               <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    تفاصيل المطالبة
+                    {t('claims.details_title')}
                   </h3>
                   <button
                     onClick={() => setSelectedClaim(null)}
@@ -245,24 +248,24 @@ export function UserDashboard() {
 
               <div className="p-6 space-y-6">
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">العنوان</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('posts.post_title')}</h4>
                   <p className="text-gray-700">{selectedClaim.title}</p>
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">الوصف</h4>
+                  <h4 className="font-semibold text-gray-900 mb-2">{t('claims.description')}</h4>
                   <p className="text-gray-700">{selectedClaim.description}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">الحالة</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">{t('common.status')}</h4>
                     <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(selectedClaim.status)}`}>
                       {getStatusText(selectedClaim.status)}
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">التقدم</h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">{t('claims.progress')}</h4>
                     <div className="flex items-center space-x-2 space-x-reverse">
                       <div className="flex-1 bg-gray-200 rounded-full h-2">
                         <div 
@@ -276,14 +279,14 @@ export function UserDashboard() {
                 </div>
 
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-4">المرفقات</h4>
+                  <h4 className="font-semibold text-gray-900 mb-4">{t('claims.attachments')}</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {selectedClaim.accident_images.map((image, index) => (
                       <div key={index}>
-                        <p className="text-sm text-gray-600 mb-2">صورة الحادث {index + 1}</p>
+                        <p className="text-sm text-gray-600 mb-2">{t('claims.accident_image', { number: index + 1 })}</p>
                         <img 
                           src={image} 
-                          alt={`صورة الحادث ${index + 1}`}
+                          alt={t('claims.accident_image', { number: index + 1 })}
                           className="w-full h-48 object-cover rounded-lg"
                         />
                       </div>
@@ -291,7 +294,7 @@ export function UserDashboard() {
                     
                     {selectedClaim.police_report && (
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">تقرير الشرطة</p>
+                        <p className="text-sm text-gray-600 mb-2">{t('claims.police_report')}</p>
                         <a 
                           href={selectedClaim.police_report}
                           target="_blank"
@@ -305,7 +308,7 @@ export function UserDashboard() {
                     
                     {selectedClaim.insurance_receipt && (
                       <div>
-                        <p className="text-sm text-gray-600 mb-2">إيصال التأمين</p>
+                        <p className="text-sm text-gray-600 mb-2">{t('claims.insurance_receipt')}</p>
                         <a 
                           href={selectedClaim.insurance_receipt}
                           target="_blank"

@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { User, Phone, Lock, Car, Calendar, AlertCircle, CheckCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../lib/supabase'
 import { FileUpload } from '../components/FileUpload'
 
 export function RegisterPage() {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     fullName: '',
     carNumber: '',
@@ -41,21 +43,21 @@ export function RegisterPage() {
 
     // Validate phone number (8 digits)
     if (!/^\d{8}$/.test(formData.phoneNumber)) {
-      setError('رقم الهاتف يجب أن يكون 8 أرقام')
+      setError(t('auth.errors.phone_invalid'))
       setLoading(false)
       return
     }
 
     // Validate PIN (4 digits)
     if (!/^\d{4}$/.test(formData.pin)) {
-      setError('الرقم السري يجب أن يكون 4 أرقام')
+      setError(t('auth.errors.pin_invalid'))
       setLoading(false)
       return
     }
 
     // Validate required files
     if (!files.profileImage || !files.driverLicense || !files.insuranceDocument) {
-      setError('جميع الملفات مطلوبة')
+      setError(t('auth.errors.files_required'))
       setLoading(false)
       return
     }
@@ -64,7 +66,7 @@ export function RegisterPage() {
     const startDate = new Date(formData.insuranceStart)
     const endDate = new Date(formData.insuranceEnd)
     if (endDate <= startDate) {
-      setError('تاريخ انتهاء التأمين يجب أن يكون بعد تاريخ البداية')
+      setError(t('auth.errors.insurance_dates_invalid'))
       setLoading(false)
       return
     }
@@ -88,9 +90,9 @@ export function RegisterPage() {
 
       if (dbError) {
         if (dbError.code === '23505') { // Unique constraint violation
-          setError('رقم الهاتف مستخدم من قبل')
+          setError(t('auth.errors.phone_exists'))
         } else {
-          setError('حدث خطأ أثناء التسجيل')
+          setError(t('auth.errors.registration_failed'))
         }
         setLoading(false)
         return
@@ -101,7 +103,7 @@ export function RegisterPage() {
         navigate('/login')
       }, 3000)
     } catch (err) {
-      setError('حدث خطأ أثناء التسجيل')
+      setError(t('auth.errors.registration_failed'))
       setLoading(false)
     }
   }
@@ -111,12 +113,12 @@ export function RegisterPage() {
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full text-center">
           <CheckCircle className="h-20 w-20 text-green-500 mx-auto mb-4" />
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">تم التسجيل بنجاح!</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('auth.sign_up.success_title')}</h2>
           <p className="text-gray-600 mb-6">
-            تم إرسال طلب التسجيل الخاص بك. سيتم مراجعة المستندات والتحقق من الحساب من قبل الإدارة.
+            {t('auth.sign_up.success_message')}
           </p>
           <p className="text-sm text-gray-500">
-            سيتم تحويلك إلى صفحة تسجيل الدخول...
+            {t('auth.sign_up.success_redirect')}
           </p>
         </div>
       </div>
@@ -132,8 +134,8 @@ export function RegisterPage() {
             alt="ONG A.A.S" 
             className="h-20 w-20 rounded-full mx-auto mb-4 border-4 border-blue-600"
           />
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">إنشاء حساب جديد</h2>
-          <p className="text-gray-600">املأ النموذج أدناه للتسجيل في النظام</p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">{t('auth.sign_up.title')}</h2>
+          <p className="text-gray-600">{t('auth.sign_up.subtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-8 space-y-6">
@@ -147,7 +149,7 @@ export function RegisterPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                الاسم الكامل *
+                {t('auth.sign_up.full_name')} *
               </label>
               <div className="relative">
                 <User className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -159,14 +161,14 @@ export function RegisterPage() {
                   value={formData.fullName}
                   onChange={handleInputChange}
                   className="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="أدخل اسمك الكامل"
+                  placeholder={t('auth.sign_up.full_name')}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="carNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                رقم السيارة *
+                {t('auth.sign_up.car_number')} *
               </label>
               <div className="relative">
                 <Car className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -178,14 +180,14 @@ export function RegisterPage() {
                   value={formData.carNumber}
                   onChange={handleInputChange}
                   className="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="أدخل رقم السيارة"
+                  placeholder={t('auth.sign_up.car_number')}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                رقم الهاتف (8 أرقام) *
+                {t('auth.sign_up.phone_number')} *
               </label>
               <div className="relative">
                 <Phone className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -197,7 +199,7 @@ export function RegisterPage() {
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
                   className="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="مثال: 12345678"
+                  placeholder={t('auth.sign_in.phone_placeholder')}
                   maxLength={8}
                 />
               </div>
@@ -205,7 +207,7 @@ export function RegisterPage() {
 
             <div>
               <label htmlFor="pin" className="block text-sm font-medium text-gray-700 mb-2">
-                الرقم السري (4 أرقام) *
+                {t('auth.sign_up.pin')} *
               </label>
               <div className="relative">
                 <Lock className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -217,7 +219,7 @@ export function RegisterPage() {
                   value={formData.pin}
                   onChange={handleInputChange}
                   className="w-full pr-10 pl-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="****"
+                  placeholder={t('auth.sign_in.pin_placeholder')}
                   maxLength={4}
                 />
               </div>
@@ -225,7 +227,7 @@ export function RegisterPage() {
 
             <div>
               <label htmlFor="insuranceStart" className="block text-sm font-medium text-gray-700 mb-2">
-                تاريخ بداية التأمين *
+                {t('auth.sign_up.insurance_start')} *
               </label>
               <div className="relative">
                 <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -243,7 +245,7 @@ export function RegisterPage() {
 
             <div>
               <label htmlFor="insuranceEnd" className="block text-sm font-medium text-gray-700 mb-2">
-                تاريخ انتهاء التأمين *
+                {t('auth.sign_up.insurance_end')} *
               </label>
               <div className="relative">
                 <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -265,7 +267,7 @@ export function RegisterPage() {
               bucket="profiles"
               accept=".jpg,.jpeg,.png"
               onUpload={handleFileUpload('profileImage')}
-              label="صورة الملف الشخصي"
+              label={t('auth.sign_up.profile_image')}
               required
             />
 
@@ -273,7 +275,7 @@ export function RegisterPage() {
               bucket="profiles"
               accept=".jpg,.jpeg,.png,.pdf"
               onUpload={handleFileUpload('driverLicense')}
-              label="رخصة القيادة"
+              label={t('auth.sign_up.driver_license')}
               required
             />
 
@@ -281,7 +283,7 @@ export function RegisterPage() {
               bucket="profiles"
               accept=".jpg,.jpeg,.png,.pdf"
               onUpload={handleFileUpload('insuranceDocument')}
-              label="وثيقة التأمين"
+              label={t('auth.sign_up.insurance_document')}
               required
             />
           </div>
@@ -291,14 +293,14 @@ export function RegisterPage() {
             disabled={loading}
             className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
-            {loading ? 'جاري التسجيل...' : 'تسجيل الحساب'}
+            {loading ? t('auth.sign_up.loading') : t('auth.sign_up.submit')}
           </button>
 
           <div className="text-center">
             <p className="text-gray-600">
-              لديك حساب بالفعل؟{' '}
+              {t('auth.sign_up.have_account')}{' '}
               <Link to="/login" className="text-blue-600 hover:text-blue-700 font-medium">
-                سجل الدخول
+                {t('auth.sign_up.login_link')}
               </Link>
             </p>
           </div>

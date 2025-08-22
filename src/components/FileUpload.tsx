@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Upload, X, FileIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../lib/supabase'
 
 interface FileUploadProps {
@@ -23,6 +24,7 @@ export function FileUpload({
   required = false,
   className = ''
 }: FileUploadProps) {
+  const { t } = useTranslation()
   const [uploading, setUploading] = useState(false)
   const [files, setFiles] = useState<File[]>([])
   const [uploadedUrls, setUploadedUrls] = useState<string[]>([])
@@ -34,7 +36,10 @@ export function FileUpload({
     // Validate file sizes
     const oversizedFiles = selectedFiles.filter(file => file.size > maxSize * 1024 * 1024)
     if (oversizedFiles.length > 0) {
-      alert(`الملفات التالية كبيرة جداً (أكثر من ${maxSize}MB): ${oversizedFiles.map(f => f.name).join(', ')}`)
+      alert(t('file_upload.files_too_large', { 
+        size: maxSize, 
+        files: oversizedFiles.map(f => f.name).join(', ') 
+      }))
       return
     }
 
@@ -76,7 +81,7 @@ export function FileUpload({
       onUpload(urls)
     } catch (error) {
       console.error('Upload error:', error)
-      alert('حدث خطأ أثناء رفع الملفات')
+      alert(t('file_upload.upload_error'))
     } finally {
       setUploading(false)
     }
@@ -110,11 +115,11 @@ export function FileUpload({
         <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
         
         <p className="text-gray-600 mb-2">
-          انقر لاختيار الملفات أو اسحبها هنا
+          {t('file_upload.drag_drop')}
         </p>
         
         <p className="text-xs text-gray-500 mb-4">
-          الحد الأقصى: {maxSize}MB | الأنواع المدعومة: {accept}
+          {t('file_upload.max_size', { size: maxSize })} | {t('file_upload.supported_types', { types: accept })}
         </p>
         
         <button
@@ -123,14 +128,14 @@ export function FileUpload({
           disabled={uploading}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors"
         >
-          {uploading ? 'جاري الرفع...' : 'اختر الملفات'}
+          {uploading ? t('file_upload.uploading') : t('file_upload.choose_files')}
         </button>
       </div>
 
       {/* File Preview */}
       {files.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">الملفات المحددة:</h4>
+          <h4 className="text-sm font-medium text-gray-700">{t('file_upload.selected_files')}</h4>
           {files.map((file, index) => (
             <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
               <div className="flex items-center space-x-3 space-x-reverse">

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Calendar, FileText, AlertCircle, CheckCircle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../contexts/AuthContext'
 import { FileUpload } from './FileUpload'
@@ -10,6 +11,7 @@ interface ClaimFormProps {
 }
 
 export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -51,26 +53,26 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
     setLoading(true)
 
     if (!user) {
-      setError('يجب تسجيل الدخول أولاً')
+      setError(t('claims.login_required'))
       setLoading(false)
       return
     }
 
     if (!user.is_verified) {
-      setError('يجب التحقق من حسابك أولاً')
+      setError(t('claims.verification_required'))
       setLoading(false)
       return
     }
 
     // Validate required files
     if (files.accidentImages.length < 2) {
-      setError('يجب رفع صورتين للحادث على الأقل')
+      setError(t('claims.images_required'))
       setLoading(false)
       return
     }
 
     if (!files.policeReport || !files.insuranceReceipt) {
-      setError('جميع الملفات مطلوبة')
+      setError(t('claims.files_required'))
       setLoading(false)
       return
     }
@@ -91,14 +93,14 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
         })
 
       if (dbError) {
-        setError('حدث خطأ أثناء تقديم المطالبة')
+        setError(t('claims.submit_error'))
         setLoading(false)
         return
       }
 
       onSuccess()
     } catch (err) {
-      setError('حدث خطأ أثناء تقديم المطالبة')
+      setError(t('claims.submit_error'))
       setLoading(false)
     }
   }
@@ -110,7 +112,7 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-2xl font-semibold text-gray-900 flex items-center space-x-2 space-x-reverse">
               <FileText className="h-6 w-6" />
-              <span>تقديم مطالبة جديدة</span>
+              <span>{t('claims.create_title')}</span>
             </h2>
           </div>
 
@@ -124,7 +126,7 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
 
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                عنوان المطالبة *
+                {t('claims.claim_title')} *
               </label>
               <input
                 id="title"
@@ -134,13 +136,13 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
                 value={formData.title}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="أدخل عنوان المطالبة"
+                placeholder={t('claims.claim_title')}
               />
             </div>
 
             <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                وصف المطالبة *
+                {t('claims.description')} *
               </label>
               <textarea
                 id="description"
@@ -150,13 +152,13 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
                 value={formData.description}
                 onChange={handleInputChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="اشرح تفاصيل الحادث والأضرار"
+                placeholder={t('claims.description')}
               />
             </div>
 
             <div>
               <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
-                تاريخ الحادث *
+                {t('claims.accident_date')} *
               </label>
               <div className="relative">
                 <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -177,7 +179,7 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
               accept=".jpg,.jpeg,.png"
               multiple
               onUpload={handleAccidentImagesUpload}
-              label="صور الحادث (صورتان على الأقل)"
+              label={t('claims.accident_images')}
               required
             />
 
@@ -185,7 +187,7 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
               bucket="claims"
               accept=".jpg,.jpeg,.png,.pdf"
               onUpload={handlePoliceReportUpload}
-              label="تقرير الشرطة"
+              label={t('claims.police_report')}
               required
             />
 
@@ -193,7 +195,7 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
               bucket="claims"
               accept=".jpg,.jpeg,.png,.pdf"
               onUpload={handleInsuranceReceiptUpload}
-              label="إيصال التأمين"
+              label={t('claims.insurance_receipt')}
               required
             />
 
@@ -203,7 +205,7 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
                 disabled={loading}
                 className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
               >
-                {loading ? 'جاري التقديم...' : 'تقديم المطالبة'}
+                {loading ? t('claims.loading') : t('claims.submit')}
               </button>
               
               <button
@@ -211,7 +213,7 @@ export function ClaimForm({ onSuccess, onCancel }: ClaimFormProps) {
                 onClick={onCancel}
                 className="flex-1 bg-gray-200 text-gray-800 py-3 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors font-medium"
               >
-                إلغاء
+                {t('common.cancel')}
               </button>
             </div>
           </form>
